@@ -1,11 +1,11 @@
 # ExcelPreviewFromURL 组件
 
-`ExcelPreviewFromURL` 是一个 React 组件，用于从指定 URL 加载 Excel 文件并将其内容以表格形式展示在页面上。它基于 `xlsx` 库解析 Excel 数据，并使用 `react-table` 渲染表格，支持动态加载和错误处理。
+`ExcelPreviewURL` 是一个 React 组件，用于从指定 URL 加载 Excel 文件并将其内容以表格形式展示在页面上。它基于 `xlsx` 库解析 Excel 数据，并使用 `react-table` 渲染表格，支持动态加载和错误处理。
 
 ## 安装
 
 ```bash
-npm install ExcelPreviewFromURL
+npm install ExcelPreviewURL
 ```
 
 ## 使用方法
@@ -16,13 +16,13 @@ npm install ExcelPreviewFromURL
 
 ```jsx
 import React from 'react';
-import {ExcelPreviewFromURL} from 'react-nexlif';;
+import {ExcelPreviewURL} from 'react-nexlif';;
 
 const App = () => {
   return (
     <div>
       <h1>Excel 文件预览</h1>
-      <ExcelPreviewFromURL fileUrl="https://example.com/sample.xlsx" />
+      <ExcelPreviewURL fileUrl="https://example.com/sample.xlsx" />
     </div>
   );
 };

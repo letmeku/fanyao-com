@@ -1,1 +1,1 @@
-export { default as ExcelPreviewFromURL } from './ExcelPreviewFromURL';
+export { default as ExcelPreviewFromURL } from './ExcelPreviewURL';
