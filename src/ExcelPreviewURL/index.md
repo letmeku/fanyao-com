@@ -5,7 +5,7 @@
 ## 安装
 
 ```bash
-npm install ExcelPreviewURL
+npm install react-nexlif
 ```
 
 ## 使用方法
@@ -22,7 +22,7 @@ const App = () => {
   return (
     <div>
       <h1>Excel 文件预览</h1>
-      <ExcelPreviewURL fileUrl="https://example.com/sample.xlsx" />
+      <ExcelPreviewURL fileUrl="http://192.168.110.40:9000/knowledgebase/是是是(1)_20250321134651.xlsx" />
     </div>
   );
 };

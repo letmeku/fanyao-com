@@ -27,7 +27,7 @@ const parseExcelFromUrl = async (url: string): Promise<{ columns: Column[]; data
   return { columns, data: rowData };
 };
 
-const ExcelPreviewFromURL: React.FC<{ fileUrl: string }> = ({ fileUrl }) => {
+const ExcelPreviewURL: React.FC<{ fileUrl: string }> = ({ fileUrl }) => {
   const [data, setData] = useState<RowData[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -62,9 +62,10 @@ const ExcelPreviewFromURL: React.FC<{ fileUrl: string }> = ({ fileUrl }) => {
     <div className="table-container">
       <table {...getTableProps()} className="excel-table">
         <thead>
-          {headerGroups.map((headerGroup: { getHeaderGroupProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableRowElement> & React.HTMLAttributes<HTMLTableRowElement>; headers: any[]; }, index: React.Key | null | undefined) => (
+          {headerGroups.map((headerGroup:any, index: React.Key | null | undefined) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-              {headerGroup.headers.map((column: { getHeaderProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableHeaderCellElement> & React.ThHTMLAttributes<HTMLTableHeaderCellElement>; render: (arg0: string) => string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }, index: React.Key | null | undefined) => (
+              {headerGroup.headers.map((column: any,
+               index: React.Key | null | undefined) => (
                 <th key={index} {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
             </tr>
@@ -75,7 +76,7 @@ const ExcelPreviewFromURL: React.FC<{ fileUrl: string }> = ({ fileUrl }) => {
             prepareRow(row);
             return (
               <tr key={index} {...row.getRowProps()}>
-                {row.cells.map((cell: { getCellProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableDataCellElement> & React.TdHTMLAttributes<HTMLTableDataCellElement>; render: (arg0: string) => string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }, index: React.Key | null | undefined) => (
+                {row.cells.map((cell:any, index: React.Key | null | undefined) => (
                   <td key={index} {...cell.getCellProps()}>{cell.render('Cell')}</td>
                 ))}
               </tr>
@@ -87,4 +88,4 @@ const ExcelPreviewFromURL: React.FC<{ fileUrl: string }> = ({ fileUrl }) => {
   );
 };
 
-export default ExcelPreviewFromURL;
+export default ExcelPreviewURL;
