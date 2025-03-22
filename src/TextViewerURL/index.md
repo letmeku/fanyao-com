@@ -24,7 +24,7 @@ const App = () => {
   return (
     <div>
       <h1>Excel 文件预览</h1>
-      <TextViewerURL fileUrl="http://192.168.110.40:9000/knowledgebase/1数据分析与挖掘ANSI_20250311140842.txt" />
+      <TextViewerURL height={500} fileUrl="http://192.168.110.40:9000/knowledgebase/1数据分析与挖掘ANSI_20250311140842.txt" />
     </div>
   );
 };

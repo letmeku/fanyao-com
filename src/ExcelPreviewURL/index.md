@@ -22,7 +22,7 @@ const App = () => {
   return (
     <div>
       <h1>Excel 文件预览</h1>
-      <ExcelPreviewURL height={200} fileUrl="http://192.168.110.40:9000/knowledgebase/是是是(1)_20250321134651.xlsx" />
+      <ExcelPreviewURL height={500} fileUrl="http://192.168.110.40:9000/knowledgebase/是是是(1)_20250321134651.xlsx" />
     </div>
   );
 };
