@@ -3,6 +3,11 @@ import * as XLSX from 'xlsx';
 import { useTable } from 'react-table';
 import './index.less';
 
+
+interface ExcelPreviewURLProps {
+  fileUrl: string;
+  height?: number;
+}
 type RowData = Record<string, string | number | Date>;
 interface Column { Header: string; accessor: string; }
 
@@ -27,7 +32,7 @@ const parseExcelFromUrl = async (url: string): Promise<{ columns: Column[]; data
   return { columns, data: rowData };
 };
 
-const ExcelPreviewURL: React.FC<{ fileUrl: string }> = ({ fileUrl }) => {
+const ExcelPreviewURL: React.FC<ExcelPreviewURLProps> = ({ fileUrl, height = 500 }) => {
   const [data, setData] = useState<RowData[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -59,7 +64,7 @@ const ExcelPreviewURL: React.FC<{ fileUrl: string }> = ({ fileUrl }) => {
   if (error) return <div className="error-message">出错啦：{error}</div>;
 
   return (
-    <div className="table-container">
+    <div className="table-container" style={{height: `${height}px`}}>
       <table {...getTableProps()} className="excel-table">
         <thead>
           {headerGroups.map((headerGroup:any, index: React.Key | null | undefined) => (

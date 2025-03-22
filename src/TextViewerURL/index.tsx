@@ -4,13 +4,14 @@ import  './index.less';
 
 interface TextViewerProps {
   fileUrl: string;
+  height?: number;
 }
 
 const hasUTF8BOM = (byteArray: Uint8Array) => byteArray[0] === 0xEF && byteArray[1] === 0xBB && byteArray[2] === 0xBF;
 const hasUTF16LEBOM = (byteArray: Uint8Array) => byteArray[0] === 0xFF && byteArray[1] === 0xFE;
 const hasUTF16BEBOM = (byteArray: Uint8Array) => byteArray[0] === 0xFE && byteArray[1] === 0xFF;
 
-const TextViewerURL: React.FC<TextViewerProps> = ({ fileUrl }) => {
+const TextViewerURL: React.FC<TextViewerProps> = ({ fileUrl,height=500 }) => {
   const [textContent, setTextContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,7 +71,7 @@ const TextViewerURL: React.FC<TextViewerProps> = ({ fileUrl }) => {
   return (
     <div className="viewerContainer">
       <div className="viewerContent">
-        <pre>{textContent}</pre>
+        <pre style={{height: `${height}px`}}>{textContent}</pre>
       </div>
     </div>
   );
