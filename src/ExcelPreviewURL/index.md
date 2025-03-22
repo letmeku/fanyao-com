@@ -4,8 +4,13 @@
 
 ## 安装
 
-```bash
+```sh
 npm install react-nexlif
+# 或者
+yarn add react-nexlif
+
+# 或者
+pnpm add react-nexlif
 ```
 
 ## 使用方法

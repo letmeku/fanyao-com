@@ -12,18 +12,25 @@
 npm install react-nexlif
 # 或者
 yarn add react-nexlif
+
+# 或者
+pnpm add react-nexlif
 ```
 
 ## 使用示例
 
 ```tsx
 import React from 'react';
-import {TextViewerURL} from 'react-nexlif';
+import {TextViewerURL,utils} from 'react-nexlif';
+
 
 const App = () => {
   return (
     <div>
       <h1>Excel 文件预览</h1>
+      <>{
+        utils.browserVersionTest().name
+      }</>
       <TextViewerURL height={500} fileUrl="http://192.168.110.40:9000/knowledgebase/1数据分析与挖掘ANSI_20250311140842.txt" />
     </div>
   );
