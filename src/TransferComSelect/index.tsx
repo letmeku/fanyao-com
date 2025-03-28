@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { TreeSelect, Switch, Spin, Empty } from 'antd';
-import {debounce} from 'lodash'; // 引入 lodash 的防抖函数
 import  './index.less';
 
 interface TreeDataNode {
