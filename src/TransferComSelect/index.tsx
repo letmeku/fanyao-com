@@ -99,9 +99,9 @@ const TransferComSelect: React.FC<TransferComSelectProps> = (props) => {
 
   // 新增：防抖搜索函数
   const filterTreeNode = useCallback(
-    debounce((inputValue: string, treeNode: any) => {
+    (inputValue: string, treeNode: any) => {
       return treeNode.title.toLowerCase().includes(inputValue.toLowerCase());
-    }, 300), // 300ms 防抖
+    },
     []
   );
 
@@ -125,7 +125,10 @@ const TransferComSelect: React.FC<TransferComSelectProps> = (props) => {
             checkedChildren={switchText.on}
             unCheckedChildren={switchText.off}
             checked={sch}
-            onChange={setSch}
+            onChange={(r)=>{
+              setTargetKeys([]);
+              setSch(r)
+            }}
           />
         </div>
         <Spin spinning={loading}>

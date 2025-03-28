@@ -25,8 +25,8 @@ import {TransferComSelect} from 'react-nexlif';
 
 const App: React.FC = () => {
   const initialTreeData = [
-    { key: '1', value: '1', title: 'Department A',id:'1' },
-    { key: '2', value: '2', title: 'Department B',id:'2' },
+    { key: '1', value: '1', title: 'Department A',id:'1' ,leaf: false},
+    { key: '2', value: '2', title: 'Department B',id:'2' ,leaf: false},
   ];
 
   const fetchData = ({ parentId }: { parentId: string }) => {
@@ -53,8 +53,6 @@ const App: React.FC = () => {
       type={0}
       selectedData={[{ id: '1' }]}
       handleChange={handleChange}
-      classtitle="custom-tree-select"
-      style={{ border: '1px solid #1890ff', borderRadius: 4 }}
       placeholder="Please input" // 自定义 placeholder
       switchText={{ onlyThisLevel: 'Only this level', on: 'On', off: 'Off' }} // 英文文案
       emptyText="No data available" // 自定义空状态文案
