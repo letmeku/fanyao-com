@@ -40,7 +40,7 @@ const App: React.FC = () => {
     });
   };
 
-  const handleChange = (data: { list: { orgId: string }[]; type: number }) => {
+  const handleChange = (data: { list: { id: string }[]; type: number }) => {
     console.log('Selected:', data);
   };
 
@@ -73,8 +73,8 @@ export default App;
 | `loadDataFetch` | `(params: { parentId: string }) => Promise<any>` | 异步加载子节点数据的请求函数 | 必填 |
 | `treeData`      | `TreeDataNode[]` | 初始的树形数据 | `[]` |
 | `type`          | `number` | 类型标识，可用于业务逻辑 | `0` |
-| `selectedData`  | `{ orgId: string }[]` | 外部传入的默认选中数据 | `[]` |
-| `handleChange`  | `(data: { list: { orgId: string }[]; type: number }) => void` | 选中数据变化时的回调 | `undefined` |
+| `selectedData`  | `{ id: string }[]` | 外部传入的默认选中数据 | `[]` |
+| `handleChange`  | `(data: { list: { id: string }[]; type: number }) => void` | 选中数据变化时的回调 | `undefined` |
 | `classtitle`     | `string` | 自定义 class | `undefined` |
 | `style`         | `React.CSSProperties` | 自定义样式 | `{}` |
 | `placeholder`   | `string` | 选择框的占位符 | `"请输入"` |
@@ -105,8 +105,8 @@ export default App;
 ## 5. 注意事项  
 
 - `loadDataFetch` **必须返回符合 `TreeDataNode` 格式的数据**，否则子节点不会正确渲染。  
-- `selectedData` 需传入 `{ orgId: string }[]` 格式，否则默认值不会正确显示。  
-- `handleChange` 回调返回的 `list` 格式为 `{ orgId: string }[]`，用于父组件获取选中结果。  
+- `selectedData` 需传入 `{ id: string }[]` 格式，否则默认值不会正确显示。  
+- `handleChange` 回调返回的 `list` 格式为 `{ id: string }[]`，用于父组件获取选中结果。  
 
 ---
 
