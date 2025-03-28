@@ -70,7 +70,4 @@ function browserVersionTest(): BrowserInfo {
   return browser;
 }
 
-export default {
-  browserVersionTest,
-  checkCompatibility,
-};
+export default browserVersionTest
