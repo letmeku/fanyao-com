@@ -1,0 +1,40 @@
+.imageList {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+
+  .deleteBtn {
+    color: rgba(0, 0, 0, 0.45);
+  }
+}
+
+.fileList {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+
+  .deleteBtn {
+    color: rgba(0, 0, 0, 0.45);
+    visibility: hidden;
+  }
+
+  &:hover {
+    background-color: #f5f5f5;
+
+    .deleteBtn {
+      visibility: visible;
+    }
+  }
+}
+
+.fileName {
+  margin: 0 8px;
+}
