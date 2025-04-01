@@ -42,7 +42,7 @@ export const FileItem: React.FC<FileItemProps> = ({
         onChange={(e) => onSelect(file.uid, e.target.checked)}
       />
       <span
-        onClick={() => setPreviewVisible(true)}
+        onClick={() => !isImage && setPreviewVisible(true)}
         style={{ cursor: 'pointer', flex: 1 }}
       >
         {isImage ? (

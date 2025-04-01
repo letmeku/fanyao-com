@@ -2,12 +2,17 @@
 
 ## 1. 组件介绍
 
-`AliUploader` 是一个基于 `antd` 的 `Transfer` 和 `Tree` 组件的树形穿梭框。它支持以下功能：
+AliUploader 组件是一个文件上传组件，支持上传到阿里云 OSS，提供批量上传、拖拽上传、文件分类管理、排序、删除、批量编辑等功能。
 
-- **树形数据结构**：可选择父级和子级数据，支持层级关系。
-- **懒加载子节点**：通过 `loadDataFetch` 进行异步加载。
-- **可搜索**：内置搜索功能，快速筛选树形节点。
-- **支持选中层级模式**：可切换是否严格按照层级选择。
+## 功能特点
+
+- **支持多种文件类型**（图片、文档、其他）
+- **支持拖拽上传**
+- **上传进度显示**
+- **文件列表管理**（分组、排序、删除、编辑）
+- **批量上传和批量编辑**
+- **上传前文件校验**（文件类型、大小限制）
+- **文件自动同步 OSS**
 
 ## 安装
 
@@ -19,7 +24,7 @@ npm install react-nexlif
 yarn add react-nexlif
 
 # 或者
-pnpm add react-nexlif
+pnpm install react-nexlif
 ```
 
 ---
@@ -32,6 +37,7 @@ pnpm add react-nexlif
 import React, { useState, useRef } from 'react';
 import { AliUploader } from 'react-nexlif';
 import { ApartmentOutlined } from '@ant-design/icons';
+// import {ossConfig} from './utils';
 
 const App: React.FC = () => {
   const uploadRef = useRef(null);
@@ -44,14 +50,14 @@ const App: React.FC = () => {
   };
 
   const handleChange = (list: any[]) => {
-    console.log('当前文件列表:', list);
+    // console.log('当前文件列表:', list);
   };
 
   const handleSuccess = (list: any[]) => {
-    console.log('上传成功:', list);
-    list.forEach((file) =>
-      console.log(`文件 ${file.name} 的 OSS 链接: ${file.url}`),
-    );
+    // console.log('上传成功:', list);
+    list.forEach((file) => {
+      // console.log(`文件 ${file.name} 的 OSS 链接: ${file.url}`),
+    });
   };
 
   const handleIds = (ids: string[]) => {
@@ -86,62 +92,47 @@ const App: React.FC = () => {
 export default App;
 ```
 
----
+## 组件属性
 
-## 3. 组件 Props 说明
+| 属性名         | 类型      | 默认值 | 说明 |
+|--------------|---------|------|--------------------------------------|
+| `accept`      | `string` | `.doc,.docx,.xls,.xlsx,.pdf,.pptx,.png,.jpg` | 允许上传的文件类型 |
+| `uploadName`  | `string` | `上传文件` | 按钮名称 |
+| `listType`    | `'text' \| 'picture'` | `text` | 显示文件列表的样式 |
+| `maxCount`    | `number` | `1` | 允许上传的最大文件数 |
+| `maxBytes`    | `number` | `20` | 允许的最大文件大小（单位：MB） |
+| `multiple`    | `boolean` | `false` | 是否支持多文件上传 |
+| `fileList`    | `FileData[]` | `[]` | 默认文件列表 |
+| `uploadUrl`   | `string` | `undefined` | 上传地址（未使用 OSS 时） |
+| `ossConfig`   | `object` | `undefined` | OSS 配置（region, accessKeyId, accessKeySecret, bucket） |
+| `showUploadList` | `boolean` | `true` | 是否显示文件列表 |
+| `disabled`    | `boolean` | `false` | 是否禁用上传 |
+| `extraTip`    | `ReactNode` | `undefined` | 额外提示信息 |
+| `showTips`    | `boolean` | `true` | 是否显示上传提示 |
+| `onChange`    | `(list: FileData[]) => void` | `undefined` | 文件列表变化时触发 |
+| `onLoading`   | `(loading: boolean) => void` | `undefined` | 上传状态变化时触发 |
+| `onSuccess`   | `(list: FileData[]) => void` | `undefined` | 上传成功时触发 |
+| `filedIds`    | `(ids: string[]) => void` | `undefined` | 返回上传的文件 ID |
 
-| 参数名          | 类型                                                           | 说明                         | 默认值      |
-| --------------- | -------------------------------------------------------------- | ---------------------------- | ----------- |
-| `loadDataFetch` | `(params: { parentId: string }) => Promise<any[]>`             | 异步加载子节点数据的请求函数 | 必填        |
-| `treeData`      | `TreeDataNode[]`                                               | 初始的树形数据               | `[]`        |
-| `type`          | `number`                                                       | 类型标识，可用于业务逻辑     | `0`         |
-| `selectedData`  | `{ orgId: string }[]`                                          | 外部传入的默认选中数据       | `[]`        |
-| `isShow`        | `boolean`                                                      | 是否显示标题栏               | `false`     |
-| `handleChange`  | `(data: { list: { orgId: string }[]; type?: number }) => void` | 选中数据变化时的回调         | `undefined` |
+## 组件方法
 
----
+- `handleUpload(file: File, fileList: File[])` - 处理文件上传逻辑。
+- `handleRemove(file: FileData)` - 删除文件。
+- `handleEdit(editedFile: FileData)` - 编辑文件信息。
+- `handleSelect(uid: string, selected: boolean)` - 选择文件进行批量操作。
+- `handleBatchEdit()` - 处理批量编辑。
+- `applyBatchEdit()` - 应用批量编辑结果。
 
-## 4. 组件特点
+## 注意事项
 
-1. **支持懒加载**
+- **OSS 配置**：确保传入正确的阿里云 OSS 配置，否则上传失败。
+- **文件校验**：组件内置文件类型和大小校验，如超出限制会有提示。
+- **排序功能**：支持按文件名称或上传时间排序。
+- **批量操作**：支持批量编辑文件备注信息。
 
-   - 通过 `loadDataFetch` 方法，动态获取子节点数据，适用于大数据量的组织结构。
+## 结论
 
-2. **支持层级选择模式**
-
-   - 通过 `Switch` 组件切换，选择是否严格按层级选择。
-
-3. **支持搜索**
-
-   - 通过 `Input` 组件，实现模糊匹配，提高筛选效率。
-
-4. **支持外部传入选中数据**
-
-   - 通过 `selectedData` 传入已有选中项，并能动态更新。
-
-5. **支持节点描述和图标**
-   - 通过 `description` 和 `icon` 赋予每个节点更多信息。
-
----
-
-## 5. 注意事项
-
-- `loadDataFetch` **必须返回符合 `TreeDataNode` 格式的数据**，否则子节点不会正确渲染。
-- `selectedData` 需传入 `{ orgId: string }[]` 格式，否则默认值不会正确显示。
-- `handleChange` 回调返回的 `list` 格式为 `{ orgId: string }[]`，用于父组件获取选中结果。
-- **搜索仅匹配当前已加载的节点**，不会影响未加载的节点。
-
----
-
-## 6. 适用场景
-
-- **组织架构管理**（如公司部门选择、用户组管理等）
-- **权限管理**（如角色授权、资源分配等）
-- **分类管理**（如商品分类、目录管理等）
-
----
-
-这个 `TransferComTree` 组件适用于复杂的树形选择场景，支持大数据优化，易于扩展和二次开发！ 🚀
+AliUploader 组件提供了强大的文件上传能力，适用于需要集成阿里云 OSS 进行文件管理的前端应用。可以方便地处理单个或多个文件上传，并对文件进行管理、分类、编辑等操作。
 
 ## 许可证
 

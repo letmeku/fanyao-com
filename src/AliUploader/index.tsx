@@ -1,18 +1,15 @@
 import { UploadOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Collapse,
-  Input,
-  Modal,
-  Select,
-  Upload,
-  UploadProps,
-  message,
-} from 'antd';
-import React, { useState } from 'react';
+import { Button, Collapse, Input, Modal, Select, Upload, message } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { FileItem } from './FileItem';
 import './index.less';
-import { uploadToOSS, validateFile } from './utils';
+import {
+  delfileFromOSS,
+  getFileType,
+  getOSSList,
+  uploadToOSS,
+  validateFile,
+} from './utils';
 
 export interface FileData {
   uid: string;
@@ -81,14 +78,10 @@ const AliUploader = ({
   const [batchEditVisible, setBatchEditVisible] = useState(false);
   const [batchNote, setBatchNote] = useState('');
 
-  const handleUpload: UploadProps['customRequest'] = async ({ file }) => {
-    console.log((file as any).fileList, '(file as any).fileList', file);
-
-    const files =
-      multiple && (file as any).fileList
-        ? Array.from((file as any).fileList)
-        : [file];
-    if (uploadFileList.length + files.length > maxCount) {
+  const handleUpload = async (file: File, fileList: File[]) => {
+    validateFile(file, accept, maxBytes);
+    const files = multiple && fileList ? fileList : [file];
+    if (files.length > maxCount) {
       message.warning(`最多上传${maxCount}个文件`);
       return;
     }
@@ -110,20 +103,21 @@ const AliUploader = ({
 
     try {
       const results = await Promise.all(
-        files.map((f: any, i) =>
-          uploadToOSS(f, ossConfig!, (percent) => {
+        files.map((f: any, i) => {
+          uploadToOSS(f, ossConfig!, (result) => {
             setUploadFileList((prev) =>
               prev.map((item) =>
-                item.uid === newFiles[i].uid ? { ...item, ...percent } : item,
+                item.uid === newFiles[i].uid ? { ...item, ...result } : item,
               ),
             );
-          }),
-        ),
+          });
+          return f;
+        }),
       );
       const finalList = maxCount === 1 ? results : uploadFileList;
       onChange?.(finalList);
       onSuccess?.(finalList);
-      filedIds?.(finalList.map((f) => f.fileId));
+      filedIds?.(finalList.map((f) => f.uid));
       message.success(`${results.length}个文件上传成功`);
     } catch (error) {
       setUploadFileList((prev) =>
@@ -139,11 +133,13 @@ const AliUploader = ({
   };
 
   const handleRemove = (file: FileData) => {
-    const newList = uploadFileList.filter((f) => f.uid !== file.uid);
-    setUploadFileList(newList);
-    setSelectedFiles((prev) => prev.filter((uid) => uid !== file.uid));
-    onChange?.(newList);
-    filedIds?.(newList.map((f) => f.fileId));
+    delfileFromOSS(file.name, ossConfig!, () => {
+      const newList = uploadFileList.filter((f) => f.uid !== file.uid);
+      setUploadFileList(newList);
+      setSelectedFiles((prev) => prev.filter((uid) => uid !== file.uid));
+      onChange?.(newList);
+      filedIds?.(newList.map((f) => f.uid));
+    });
   };
 
   const handleEdit = (editedFile: FileData) => {
@@ -179,8 +175,6 @@ const AliUploader = ({
     setBatchNote('');
   };
 
-  const beforeUpload = (file: File) => validateFile(file, accept, maxBytes);
-
   const groupedFiles = {
     image: uploadFileList.filter((f) => f.type === 'image'),
     document: uploadFileList.filter((f) => f.type === 'document'),
@@ -194,29 +188,42 @@ const AliUploader = ({
         : a.name.localeCompare(b.name),
     );
 
-  console.log(uploadFileList, 'showUploadList111');
+  useEffect(() => {
+    getOSSList(ossConfig!, (result) => {
+      const arr = result.objects.map((r: any) => ({
+        uid: `r.name+${Date.now()}-${Math.random()}`,
+        name: r.name,
+        thumbUrl: r.url,
+        url: r.url,
+        status: 'done',
+        percent: 100,
+        type: getFileType(r.name),
+        uploadTime: r.lastModified,
+      }));
+      setUploadFileList((prev) => [...prev, ...arr]);
+    });
+  }, []);
 
   return (
     <div className="fileUpload">
-      <Upload
+      <Upload.Dragger
         accept={accept}
         listType={listType as any}
         maxCount={maxCount}
         multiple={multiple}
-        beforeUpload={beforeUpload}
-        customRequest={handleUpload}
+        beforeUpload={handleUpload}
         fileList={[]}
         disabled={disabled || loading}
       >
         <Button icon={<UploadOutlined />} loading={loading} disabled={disabled}>
           {uploadName}
         </Button>
-        {!uploadFileList.length && showTips && (
+        {showTips && (
           <div className="tip">
             {`支持${maxBytes}MB以内的${accept}文件（可拖拽上传，直接存至 OSS）`}
           </div>
         )}
-      </Upload>
+      </Upload.Dragger>
       {showUploadList && (
         <div>
           <div style={{ margin: '10px 0px' }}>
