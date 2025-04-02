@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Spin, Tooltip, Input } from 'antd';
 import {
@@ -17,7 +17,6 @@ import {
 import  './index.less';
 import { Document, Page, pdfjs } from 'react-pdf';
 import pdfjsWorker from 'react-pdf/dist/esm/pdf.worker.entry';
-import React from 'react';
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -85,103 +84,109 @@ const PDFView = ({
     }
   }, [pageNumber]);
 
-  return <div className='view'>
-      <div className='viewContent'>
-        <div className='pageMain' ref={pageDiv}>
-          <div className='pageContainer'>
-              <Document
-                file={file}
-                onLoadSuccess={onDocumentLoadSuccess}
-                error={
-                  <div style={{ textAlign: 'center', width: defaultWidth + 'px' }}>
-                    <ExclamationCircleOutlined style={{ fontSize: '150px', color: '#fe725c', margin: '100px' }} />
-                  </div>
-                }
-                loading={<div style={{ textAlign: 'center', width: defaultWidth + 'px' }}><Spin size="large" style={{ margin: '200px' }} /></div>}
-              >
-                {showThumbnails ? (
-                  <div className='thumbnailContainer'>
-                    {Array.from({ length: numPages }, (_, i) => i + 1).map((page) => (
-                      <div
-                        key={page}
-                        className='thumbnail'
-                        onClick={() => {
-                          setPageNumber(page);
-                          setShowThumbnails(false);
-                        }}
-                      >
-                        {visiblePages.includes(page) ? (
-                          <Page
-                            pageNumber={page}
-                            width={150}
-                            rotate={rotation}
-                            loading={<Spin />}
-                            renderTextLayer={false} // 禁用文本层，提升性能
-                            renderAnnotationLayer={false} // 禁用注释层
-                          />
-                        ) : (
-                          <div className='thumbnailPlaceholder'>第 {page} 页</div>
-                        )}
-                        <span>第 {page} 页</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <Page
-                    pageNumber={pageNumber}
-                    width={pageWidth}
-                    rotate={rotation}
-                    loading={<Spin size="large" />}
-                    renderTextLayer={false} // 禁用文本层
-                    renderAnnotationLayer={false} // 禁用注释层
-                    error={() => setPageNumber(1)}
-                  />
-                )}
-              </Document>
-          </div>
+  const renderContent=()=>(<div className='view'>
+    <div className='viewContent' >
+      <div className='pageMain' ref={pageDiv}>
+        <div className='pageContainer'>
+            <Document
+              file={file}
+              onLoadSuccess={onDocumentLoadSuccess}
+              error={
+                <div style={{ textAlign: 'center', width: defaultWidth + 'px' }}>
+                  <ExclamationCircleOutlined style={{ fontSize: '150px', color: '#fe725c', margin: '100px' }} />
+                </div>
+              }
+              loading={<div style={{ textAlign: 'center', width: defaultWidth + 'px' }}><Spin size="large" style={{ margin: '200px' }} /></div>}
+            >
+              {showThumbnails ? (
+                <div className='thumbnailContainer'>
+                  {Array.from({ length: numPages }, (_, i) => i + 1).map((page) => (
+                    <div
+                      key={page}
+                      className='thumbnail'
+                      onClick={() => {
+                        setPageNumber(page);
+                        setShowThumbnails(false);
+                      }}
+                    >
+                      {visiblePages.includes(page) ? (
+                        <Page
+                          pageNumber={page}
+                          width={150}
+                          rotate={rotation}
+                          loading={<Spin />}
+                          renderTextLayer={false} // 禁用文本层，提升性能
+                          renderAnnotationLayer={false} // 禁用注释层
+                        />
+                      ) : (
+                        <div className='thumbnailPlaceholder'>第 {page} 页</div>
+                      )}
+                      <span>第 {page} 页</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Page
+                  pageNumber={pageNumber}
+                  width={pageWidth}
+                  rotate={rotation}
+                  loading={<Spin size="large" />}
+                  renderTextLayer={false} // 禁用文本层
+                  renderAnnotationLayer={false} // 禁用注释层
+                  error={() => setPageNumber(1)}
+                />
+              )}
+            </Document>
         </div>
-        <div className='pageBar'>
-          <div className='pageTool'>
-            <Tooltip title={pageNumber === 1 ? '已是第一页' : '上一页'}>
-              <LeftOutlined onClick={lastPage} />
+      </div>
+      <div className='pageBar'>
+        <div className='pageTool'>
+          <Tooltip title={pageNumber === 1 ? '已是第一页' : '上一页'}>
+            <LeftOutlined onClick={lastPage} />
+          </Tooltip>
+          <Input
+            value={pageNumber}
+            onChange={onPageNumberChange}
+            onPressEnter={onPageNumberChange as any}
+            type="number"
+          />{' '}
+          / {numPages}
+          <Tooltip title={pageNumber === numPages ? '已是最后一页' : '下一页'}>
+            <RightOutlined onClick={nextPage} />
+          </Tooltip>
+          <Tooltip title="放大">
+            <PlusCircleOutlined onClick={pageZoomIn} />
+          </Tooltip>
+          <Tooltip title="缩小">
+            <MinusCircleOutlined onClick={pageZoomOut} />
+          </Tooltip>
+          <Tooltip title="向左旋转">
+            <RotateLeftOutlined onClick={rotateLeft} />
+          </Tooltip>
+          <Tooltip title="向右旋转">
+            <RotateRightOutlined onClick={rotateRight} />
+          </Tooltip>
+          <Tooltip title={showThumbnails ? '关闭缩略图' : '显示缩略图'}>
+            <UnorderedListOutlined onClick={toggleThumbnails} />
+          </Tooltip>
+          <Tooltip title={fullscreen ? '恢复默认' : '适合窗口'}>
+            {fullscreen ? <FullscreenExitOutlined onClick={pageFullscreen} /> : <FullscreenOutlined onClick={pageFullscreen} />}
+          </Tooltip>
+          {onClose && (
+            <Tooltip title="关闭">
+              <CloseCircleOutlined onClick={onClose} />
             </Tooltip>
-            <Input
-              value={pageNumber}
-              onChange={onPageNumberChange}
-              onPressEnter={onPageNumberChange as any}
-              type="number"
-            />{' '}
-            / {numPages}
-            <Tooltip title={pageNumber === numPages ? '已是最后一页' : '下一页'}>
-              <RightOutlined onClick={nextPage} />
-            </Tooltip>
-            <Tooltip title="放大">
-              <PlusCircleOutlined onClick={pageZoomIn} />
-            </Tooltip>
-            <Tooltip title="缩小">
-              <MinusCircleOutlined onClick={pageZoomOut} />
-            </Tooltip>
-            <Tooltip title="向左旋转">
-              <RotateLeftOutlined onClick={rotateLeft} />
-            </Tooltip>
-            <Tooltip title="向右旋转">
-              <RotateRightOutlined onClick={rotateRight} />
-            </Tooltip>
-            <Tooltip title={showThumbnails ? '关闭缩略图' : '显示缩略图'}>
-              <UnorderedListOutlined onClick={toggleThumbnails} />
-            </Tooltip>
-            <Tooltip title={fullscreen ? '恢复默认' : '适合窗口'}>
-              {fullscreen ? <FullscreenExitOutlined onClick={pageFullscreen} /> : <FullscreenOutlined onClick={pageFullscreen} />}
-            </Tooltip>
-            {onClose && (
-              <Tooltip title="关闭">
-                <CloseCircleOutlined onClick={onClose} />
-              </Tooltip>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>
+  </div>)
+  if(parentDom){
+    return renderContent()
+  }
+  return createPortal(
+    renderContent(),
+    parent,)
 };
 
 export default PDFView;

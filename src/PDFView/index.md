@@ -31,33 +31,20 @@ pnpm add react-nexlif
 
 ```tsx
 import { PDFView } from 'react-nexlif';
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import { Button, Modal } from 'antd';
 const App = () => {
   const [visible, setVisible] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
   const fileUrl = "https://example.com/sample.pdf"; // 替换为你的 PDF 文件地址
- const showModal = () => {
-    setVisible(true);
-  };
-
-  const handleOk = () => {
-    setVisible(false);
-  };
-
-  const handleCancel = () => {
-    setVisible(false);
-  };
   return (
     <div >
       <button onClick={() => setVisible(true)}>打开 PDF</button>
-       <Modal width={1100}  title="pdf预览组件" open={visible} onOk={handleOk} onCancel={handleCancel}>
-        <div style={{ position: 'relative', height: '100vh',width: '100%' }}>
-     <PDFView
+     {visible&&<PDFView
           file={fileUrl}
           onClose={() => setVisible(false)}
         />
-        </div>
-      </Modal>
+        }
     </div>
   );
 };
@@ -65,44 +52,35 @@ const App = () => {
 export default App;
 ```
 
-### 3. 使用示例2
+### 3. 使用示例2(插入的父元素)
 
 ```tsx
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import { PDFView } from 'react-nexlif';
 import { Button, Modal } from 'antd';
 const App: React.FC = () => {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setFileUrl(URL.createObjectURL(file))
-      showModal();
     };
   };
- const showModal = () => {
-    setVisible(true);
-  };
-
-  const handleOk = () => {
-    setVisible(false);
-  };
-
-  const handleCancel = () => {
-    setVisible(false);
-  };
   return (
-    <div style={{ position: 'relative', height: '100%',width: '100%' }}>
-      <input type="file" accept=".pdf" onChange={handleFileChange} />
-        <Modal width={1100} title="pdf预览组件" open={visible} onOk={handleOk} onCancel={handleCancel}>
-        <div style={{ position: 'relative', height: '100vh',width: '100%'}}>
-        <PDFView
+    <div ref={ref} style={{ position: 'relative', height: '100%',width: '100%' }}>
+      <input  type="file" accept=".pdf" onChange={handleFileChange} />
+      
+          <div ref={ref} style={{ position: 'relative', minHeight: '100vh',width:1100,height:'100%'}}>
+       {fileUrl&& <PDFView
+          parentDom={ref.current}
           file={fileUrl}
-          onClose={() => setVisible(false)}
-        />
+          onClose={() => {
+            setFileUrl(null)
+          }}
+        />}
         </div>
-      </Modal>
     </div>
   );
 };
