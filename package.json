@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "nexlif.xiaoyaoai.fun/components/ali-uploader"
+    "url": "https://github.com/wangbaoqi1/react-nexlif"
   },
   "homepage": "https://nexlif.xiaoyaoai.fun/components/ali-uploader",
   "files": [
