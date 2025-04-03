@@ -6,6 +6,11 @@
   "author": "wangbaoqi",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "nexlif.xiaoyaoai.fun/components/ali-uploader"
+  },
+  "homepage": "https://nexlif.xiaoyaoai.fun/components/ali-uploader",
   "files": [
     "dist"
   ],
