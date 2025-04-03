@@ -15,9 +15,11 @@ import {
   UnorderedListOutlined,
 } from '@ant-design/icons';
 import  './index.less';
+// @ts-ignore
 import { Document, Page, pdfjs } from 'react-pdf';
-import pdfjsWorker from 'react-pdf/dist/esm/pdf.worker.entry';
-
+// @ts-ignore
+import pdfjsWorker from 'react-pdf/dist/esm/pdf.worker.entry.js';
+// @ts-ignore
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const PDFView = ({

@@ -4,6 +4,7 @@
     "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "typeRoots": ["node_modules/@types"],
     "jsx": "react",
     "baseUrl": "./",
     "paths": {
@@ -12,5 +13,5 @@
       "react-nexlif/*": ["src/*", "*"]
     }
   },
-  "include": [".dumirc.ts", "src/**/*"]
+  "include": [".dumirc.ts", "src/**/*", "typings.d.ts"]
 }

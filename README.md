@@ -36,6 +36,9 @@ $ pnpm run docs:preview
 
 # check your project for potential problems
 $ pnpm run doctor
+
+# npm publish
+$ npm publish
 ```
 
 ## feat: 新功能开发（feature）

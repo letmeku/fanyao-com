@@ -95,7 +95,7 @@ export async function getOSSList(
     accessKeySecret: ossConfig.accessKeySecret,
     bucket: ossConfig.bucket,
   });
-
+// @ts-ignore
   const result = await client.list();
   if (result.res.status !== 200) throw new Error('OSS 上传失败');
   callback(result);
