@@ -1,16 +1,16 @@
 {
   "name": "react-nexlif",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A react library developed with dumi",
-  "license": "MIT",
-  "author": "wangbaoqi",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "homepage": "https://nexlif.xiaoyaoai.fun/components/ali-uploader",
   "repository": {
     "type": "git",
     "url": "https://github.com/wangbaoqi1/react-nexlif"
   },
-  "homepage": "https://nexlif.xiaoyaoai.fun/components/ali-uploader",
+  "license": "MIT",
+  "author": "wangbaoqi",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
