@@ -22,16 +22,30 @@ import pdfjsWorker from 'react-pdf/dist/esm/pdf.worker.entry.js';
 // @ts-ignore
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
+interface Config{
+  zoom:boolean;
+  rotate:boolean;
+  screenScale:boolean;
+  thumbnails:boolean;
+  close:boolean;
+}
+
+interface Props {
+  file?: string | null;
+  parentDom?: HTMLDivElement | null;
+  onClose?: () => void;
+  operationConfig?:Config
+  width?:number
+}
+
 const PDFView = ({
   file,
   parentDom,
   onClose,
-}: {
-  file?: string | null;
-  parentDom?: HTMLDivElement | null;
-  onClose?: () => void;
-}) => {
-  const defaultWidth = 600;
+  operationConfig,
+  width
+}: Props) => {
+  const defaultWidth = width || 600;
   const pageDiv = useRef<HTMLDivElement>(null);
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -40,7 +54,12 @@ const PDFView = ({
   const [rotation, setRotation] = useState<number>(0);
   const [showThumbnails, setShowThumbnails] = useState<boolean>(false);
   const [visiblePages, setVisiblePages] = useState<number[]>([1]); // 控制可见页面
-
+  const{
+    zoom=true,
+    rotate=true,
+    screenScale=true,
+    thumbnails=true,
+    close=true,}=operationConfig||{}
   const parent = parentDom || document.body;
 
   // 加载 PDF 元信息，不渲染全部页面
@@ -156,25 +175,25 @@ const PDFView = ({
           <Tooltip title={pageNumber === numPages ? '已是最后一页' : '下一页'}>
             <RightOutlined onClick={nextPage} />
           </Tooltip>
-          <Tooltip title="放大">
-            <PlusCircleOutlined onClick={pageZoomIn} />
-          </Tooltip>
-          <Tooltip title="缩小">
+        {zoom&&<Tooltip title="放大">
+          <PlusCircleOutlined onClick={pageZoomIn} />
+        </Tooltip>}
+        {zoom&&<Tooltip title="缩小">
             <MinusCircleOutlined onClick={pageZoomOut} />
-          </Tooltip>
-          <Tooltip title="向左旋转">
+          </Tooltip>}
+          {rotate&&<Tooltip title="向左旋转">
             <RotateLeftOutlined onClick={rotateLeft} />
-          </Tooltip>
-          <Tooltip title="向右旋转">
+          </Tooltip>}
+          {rotate&&<Tooltip title="向右旋转">
             <RotateRightOutlined onClick={rotateRight} />
-          </Tooltip>
-          <Tooltip title={showThumbnails ? '关闭缩略图' : '显示缩略图'}>
+          </Tooltip>}
+          {thumbnails&&<Tooltip title={showThumbnails ? '关闭缩略图' : '显示缩略图'}>
             <UnorderedListOutlined onClick={toggleThumbnails} />
-          </Tooltip>
-          <Tooltip title={fullscreen ? '恢复默认' : '适合窗口'}>
+          </Tooltip>}
+          {screenScale&&<Tooltip title={fullscreen ? '恢复默认' : '适合窗口'}>
             {fullscreen ? <FullscreenExitOutlined onClick={pageFullscreen} /> : <FullscreenOutlined onClick={pageFullscreen} />}
-          </Tooltip>
-          {onClose && (
+          </Tooltip>}
+          {close && onClose && (
             <Tooltip title="关闭">
               <CloseCircleOutlined onClick={onClose} />
             </Tooltip>
@@ -183,6 +202,9 @@ const PDFView = ({
       </div>
     </div>
   </div>)
+  if(!file){
+    return <div style={{textAlign:'center',width:defaultWidth+'px' }}>文件不存在</div>
+  }
   if(parentDom){
     return renderContent()
   }

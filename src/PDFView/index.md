@@ -72,14 +72,15 @@ const App: React.FC = () => {
     <div ref={ref} style={{ position: 'relative', height: '100%',width: '100%' }}>
       <input  type="file" accept=".pdf" onChange={handleFileChange} />
       
-          <div ref={ref} style={{ position: 'relative', minHeight: '100vh',width:1100,height:'100%'}}>
-       {fileUrl&& <PDFView
+          <div ref={ref} style={{ position: 'relative', minHeight: '100vh',width:860,height:'100%'}}>
+       <PDFView
           parentDom={ref.current}
           file={fileUrl}
+          width={800}
           onClose={() => {
             setFileUrl(null)
           }}
-        />}
+        />
         </div>
     </div>
   );
