@@ -35,11 +35,17 @@ import { Button, Modal } from 'antd';
 const App = () => {
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const fileUrl = 'https://example.com/sample.pdf'; // 替换为你的 PDF 文件地址
+  const fileUrl = 'https://www.gov.cn/zhengce/pdfFile/2023_PDF.pdf'; // 替换为你的 PDF 文件地址
   return (
     <div>
       <button onClick={() => setVisible(true)}>打开 PDF</button>
-      {visible && <PDFView file={fileUrl} onClose={() => setVisible(false)} />}
+      {visible && (
+        <PDFView
+          lazyLoad={false}
+          file={fileUrl}
+          onClose={() => setVisible(false)}
+        />
+      )}
     </div>
   );
 };
@@ -50,7 +56,7 @@ export default App;
 ### 3. 使用示例 2(插入的父元素)
 
 ```tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PDFView } from 'react-nexlif';
 import { Button, Modal } from 'antd';
 const App: React.FC = () => {
@@ -63,6 +69,12 @@ const App: React.FC = () => {
       setFileUrl(URL.createObjectURL(file));
     }
   };
+  useEffect(() => {
+    if (ref) {
+      // 测试链接
+      setFileUrl('https://www.gov.cn/zhengce/pdfFile/2023_PDF.pdf');
+    }
+  }, []);
   return (
     <div
       ref={ref}
@@ -74,15 +86,15 @@ const App: React.FC = () => {
         ref={ref}
         style={{
           position: 'relative',
-          minHeight: '100vh',
-          width: 860,
+          minHeight: 600,
+          width: 650,
           height: '100%',
         }}
       >
         <PDFView
           parentDom={ref.current}
           file={fileUrl}
-          width={800}
+          width={600}
           lazyLoad={true}
           lazyLoadConfig={{ threshold: 400, pagesPerLoad: 4 }}
           onClose={() => {
@@ -97,45 +109,108 @@ const App: React.FC = () => {
 export default App;
 ```
 
-## 组件属性
+### 属性 (Props)
 
-| 属性名      | 类型                     | 默认值          | 说明                                |
-| ----------- | ------------------------ | --------------- | ----------------------------------- |
-| `file`      | `string \| null`         | `null`          | 要加载的 PDF 文件地址               |
-| `parentDom` | `HTMLDivElement \| null` | `document.body` | 组件渲染的父容器，默认渲染到 `body` |
-| `onClose`   | `() => void`             | `undefined`     | 关闭组件的回调函数                  |
+| 属性名            | 类型                     | 是否必填 | 默认值          | 描述                                                                      |
+| ----------------- | ------------------------ | -------- | --------------- | ------------------------------------------------------------------------- |
+| `file`            | `string \| null`         | 否       | `null`          | PDF 文件的 URL 或路径。若为空，显示“文件不存在”。                         |
+| `parentDom`       | `HTMLDivElement \| null` | 否       | `document.body` | 渲染 PDF 的父容器。若未提供，使用 `createPortal` 渲染到 `document.body`。 |
+| `onClose`         | `() => void`             | 否       | 无              | 关闭按钮的回调函数。                                                      |
+| `operationConfig` | `Config`                 | 否       | `{}`            | 控制操作栏功能的配置对象（见下表）。                                      |
+| `width`           | `number`                 | 否       | `600`           | PDF 页面默认宽度（像素）。                                                |
+| `lazyLoad`        | `boolean`                | 否       | `false`         | 是否启用懒加载，优化多页 PDF 性能。                                       |
+| `lazyLoadConfig`  | `LazyLoadConfig`         | 否       | `{}`            | 懒加载配置（见下表）。                                                    |
 
-## 组件功能说明
+#### `operationConfig` 配置项
 
-### 1. **页面翻页**
+| 属性名        | 类型      | 默认值 | 描述                                         |
+| ------------- | --------- | ------ | -------------------------------------------- |
+| `showPage`    | `boolean` | `true` | 是否显示页面导航（上一页/下一页/页码输入）。 |
+| `zoom`        | `boolean` | `true` | 是否显示缩放按钮（放大/缩小）。              |
+| `rotate`      | `boolean` | `true` | 是否显示旋转按钮（左旋/右旋）。              |
+| `screenScale` | `boolean` | `true` | 是否显示全屏/恢复按钮。                      |
+| `thumbnails`  | `boolean` | `true` | 是否显示缩略图切换按钮。                     |
+| `close`       | `boolean` | `true` | 是否显示关闭按钮。                           |
 
-- 使用 `<`（上一页）和 `>`（下一页）按钮进行翻页。
-- 可以输入页码并回车跳转到指定页。
+#### `lazyLoadConfig` 配置项
 
-### 2. **缩放**
+| 属性名         | 类型     | 默认值             | 描述                           |
+| -------------- | -------- | ------------------ | ------------------------------ |
+| `threshold`    | `number` | 动态（300 或 150） | 触发懒加载的滚动距离（像素）。 |
+| `pagesPerLoad` | `number` | 动态（5 或 2）     | 每次懒加载的页面数。           |
 
-- 点击 `+` 放大 PDF 页面。
-- 点击 `-` 缩小 PDF 页面。
+### 功能特性
 
-### 3. **旋转**
+- **页面导航**：支持上一页、下一页、指定页码跳转（输入框或键盘箭头键）。
+- **缩放与全屏**：支持放大（Ctrl +）、缩小（Ctrl -）、全屏切换（Ctrl + F）。
+- **旋转**：支持页面左旋/右旋（90° 增量）。
+- **缩略图预览**：可切换显示缩略图（Ctrl + T），点击缩略图快速跳转。
+- **懒加载**：优化多页 PDF 性能，仅加载可见页面附近的内容。
+- **键盘导航**：支持快捷键，提升无障碍体验。
+- **错误处理**：加载失败时显示友好提示（带图标）。
+- **动态渲染**：支持动态调整页面宽度和父容器。
+- **无障碍支持**：操作按钮包含 ARIA 属性，支持键盘交互。
 
-- 点击 `↺` 向左旋转 90°。
-- 点击 `↻` 向右旋转 90°。
+## 样式自定义
 
-### 4. **全屏模式**
+组件默认样式位于 `index.less`，你可以通过覆盖以下类名自定义外观：
 
-- 点击 `⛶` 使 PDF 页面适应窗口大小。
-- 点击 `⛶` 退出全屏，恢复默认大小。
+- `.view`：整体容器
+- `.pageMain`：PDF 页面区域
+- `.pageContainer`：页面内容容器
+- `.thumbnailContainer`：缩略图容器
+- `.pageBar`：操作栏
+- `.pdf-page-container`：单页容器
+- `.pdf-page-content`：单页内容
 
-### 5. **缩略图预览**
+示例自定义样式：
 
-- 点击 `📄` 显示所有页面的缩略图。
-- 点击缩略图可快速跳转到对应页。
+```css
+.view {
+  background-color: #f5f5f5;
+  padding: 20px;
+}
 
-### 6. **错误提示 & 加载状态**
+.pageMain {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+}
 
-- 如果文件加载失败，会显示错误提示。
-- 页面加载过程中会显示 `Spin` 加载动画。
+.thumbnailContainer .thumbnail {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.thumbnailContainer .thumbnail:hover {
+  border-color: #1890ff;
+}
+
+.pageBar {
+  background-color: #fff;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+```
+
+## 注意事项
+
+1. **CORS 限制**：确保 `file` 提供的 PDF URL 支持跨域请求（CORS），否则加载可能失败。
+2. **依赖版本**：确保 `react-pdf`, `antd`, 和 `lodash` 的版本与组件兼容。
+3. **性能优化**：对于大型 PDF（多页），建议启用 `lazyLoad` 并调整 `lazyLoadConfig` 参数。
+4. **无障碍支持**：组件已添加 ARIA 属性，确保操作按钮可通过键盘访问（Tab/Enter）。
+5. **网络环境**：使用淘宝源可加速国内访问，但发布包需切换到官方源。
+6. **浏览器兼容性**：确保浏览器支持 Web Worker（用于 `react-pdf` 的 PDF 解析）。
+
+### 说明
+
+- **完整性**：文档包含安装、使用、属性说明、样式自定义、注意事项等，适合开发者快速上手。
+- **淘宝源与错误处理**：整合了设置淘宝源和解决“Public registration is not allowed”的说明，放在安装部分。
+- **组件特性**：详细描述了 `PDFView` 的功能（导航、缩放、懒加载等），并通过表格清晰呈现属性。
+- **示例代码**：提供了基本用法和高级配置示例，包含父容器和懒加载设置。
+- **样式自定义**：列出关键类名并提供示例，方便用户调整外观。
+
+如果需要调整文档内容（比如添加更多示例、精简某部分，或针对特定场景优化），请告诉我！
 
 ## 结论
 

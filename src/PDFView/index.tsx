@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState, RefObject, ChangeEvent, FC, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { Spin, Tooltip, Input, Progress } from 'antd';
 import {
@@ -25,6 +25,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 // 类型定义
 interface Config {
+  showPage?: boolean;
   zoom?: boolean;
   rotate?: boolean;
   screenScale?: boolean;
@@ -54,15 +55,15 @@ const usePDFView = (
   numPages: number,
   lazyLoad: boolean,
   lazyLoadConfig: LazyLoadConfig = {},
-  pageDiv: React.RefObject<HTMLDivElement>
+  pageDiv: RefObject<HTMLDivElement>
 ) => {
-  const [pageNumber, setPageNumber] = React.useState<number>(1);
-  const [pageWidth, setPageWidth] = React.useState<number>(defaultWidth);
-  const [fullscreen, setFullscreen] = React.useState<boolean>(false);
-  const [rotation, setRotation] = React.useState<number>(0);
-  const [showThumbnails, setShowThumbnails] = React.useState<boolean>(false);
-  const [visiblePages, setVisiblePages] = React.useState<number[]>([1]);
-  const MAX_VISIBLE_PAGES = 10;
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pageWidth, setPageWidth] = useState<number>(defaultWidth);
+  const [fullscreen, setFullscreen] = useState<boolean>(false);
+  const [rotation, setRotation] = useState<number>(0);
+  const [showThumbnails, setShowThumbnails] = useState<boolean>(false);
+  const [visiblePages, setVisiblePages] = useState<number[]>([1]);
+  const MAX_VISIBLE_PAGES = 20;
 
   // 动态加载参数
   const defaultThreshold = navigator.hardwareConcurrency > 4 ? 300 : 150;
@@ -79,7 +80,7 @@ const usePDFView = (
   }, [pageNumber, numPages]);
 
   const onPageNumberChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       const value = Math.max(1, Math.min(numPages, Number(e.target.value) || 1));
       setPageNumber(value);
       // if (!lazyLoad && !showThumbnails) {
@@ -215,7 +216,6 @@ const usePDFView = (
     setPageNumber(1);
     setVisiblePages([1]);
   }, [file]);
-
   // 滚动到顶部
   useEffect(() => {
     if (pageDiv.current) {
@@ -244,7 +244,7 @@ const usePDFView = (
   };
 };
 
-const PDFView: React.FC<Props> = ({
+const PDFView: FC<Props> = ({
   file,
   parentDom,
   onClose,
@@ -254,15 +254,16 @@ const PDFView: React.FC<Props> = ({
   lazyLoadConfig = {},
 }) => {
   const pageDiv = useRef<HTMLDivElement>(null);
-  const [numPages, setNumPages] = React.useState<number>(0);
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [loadedPages, setLoadedPages] = React.useState<Set<number>>(new Set());
+  const [numPages, setNumPages] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadedPages, setLoadedPages] = useState<Set<number>>(new Set());
   const {
     zoom = true,
     rotate = true,
     screenScale = true,
     thumbnails = true,
     close = true,
+    showPage = true,
   } = operationConfig;
   const parent = parentDom || document.body;
 
@@ -285,6 +286,7 @@ const PDFView: React.FC<Props> = ({
     setPageNumber,
   } = usePDFView(file, width, numPages, lazyLoad, lazyLoadConfig, pageDiv);
 
+
   // 加载 PDF 元信息
   const onDocumentLoadSuccess = useCallback(({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -296,23 +298,30 @@ const PDFView: React.FC<Props> = ({
     setLoadedPages((prev) => new Set(prev).add(page));
   }, []);
 
-  const progressPercent = numPages > 0 ? (loadedPages.size / numPages) * 100 : 0;
 
   // 缓存页面渲染
-  const renderPage = React.useMemo(() => {
+  const renderPage = useMemo(() => {
     return (page: number) => (
-      <Page
-        key={page}
-        pageNumber={page}
-        width={pageWidth}
-        rotate={rotation}
-        loading={<Spin size="large" />}
-        renderTextLayer={false}
-        renderAnnotationLayer={false}
-        onLoadSuccess={() => onPageLoadSuccess(page)}
-        onLoadError={() => setPageNumber(1)}
-        renderMode="canvas"
-      />
+      <div key={`page-${page}`} className="pdf-page-container">
+        <div className="pdf-page-content" style={{
+          background: '#fff', // 页面内容保持白色背景
+          margin: '0 auto', // 水平居中
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)' // 保留原有阴影
+        }}>
+          <Page
+            key={page}
+            pageNumber={page}
+            width={pageWidth}
+            rotate={rotation}
+            loading={<Spin size="large" />}
+            renderTextLayer={false}
+            renderAnnotationLayer={false}
+            onLoadSuccess={() => onPageLoadSuccess(page)}
+            onLoadError={() => setPageNumber(1)}
+            renderMode="canvas"
+          />
+        </div>
+      </div>
     );
   }, [pageWidth, rotation, onPageLoadSuccess]);
 
@@ -367,6 +376,7 @@ const PDFView: React.FC<Props> = ({
                   ))}
                 </div>
               ) : (
+
                 visiblePages.map(renderPage)
               )}
             </Document>
@@ -374,40 +384,34 @@ const PDFView: React.FC<Props> = ({
         </div>
         <div className="pageBar">
           <div className="pageTool" role="toolbar" aria-label="PDF 导航工具栏">
-            {numPages > 0 && (
-              <Progress
-                percent={progressPercent}
-                size="small"
-                style={{ width: '100px', marginRight: '10px' }}
-                showInfo={false}
+            {showPage && <>
+              <Tooltip title={pageNumber === 1 ? '已是第一页' : '上一页'}>
+                <LeftOutlined
+                  onClick={lastPage}
+                  tabIndex={0}
+                  role="button"
+                  aria-label="上一页"
+                  onKeyDown={(e) => e.key === 'Enter' && lastPage()}
+                />
+              </Tooltip>
+              <Input
+                value={pageNumber}
+                onChange={debounce(onPageNumberChange, 500)}
+                type="number"
+                disabled={loading}
+                aria-label={`当前页码，共 ${numPages} 页`}
               />
-            )}
-            <Tooltip title={pageNumber === 1 ? '已是第一页' : '上一页'}>
-              <LeftOutlined
-                onClick={lastPage}
-                tabIndex={0}
-                role="button"
-                aria-label="上一页"
-                onKeyDown={(e) => e.key === 'Enter' && lastPage()}
-              />
-            </Tooltip>
-            <Input
-              value={pageNumber}
-              onChange={debounce(onPageNumberChange, 500)}
-              type="number"
-              disabled={loading}
-              aria-label={`当前页码，共 ${numPages} 页`}
-            />
-            <span aria-hidden="true"> / {numPages}</span>
-            <Tooltip title={pageNumber === numPages ? '已是最后一页' : '下一页'}>
-              <RightOutlined
-                onClick={nextPage}
-                tabIndex={0}
-                role="button"
-                aria-label="下一页"
-                onKeyDown={(e) => e.key === 'Enter' && nextPage()}
-              />
-            </Tooltip>
+              <span aria-hidden="true"> / {numPages}</span>
+              <Tooltip title={pageNumber === numPages ? '已是最后一页' : '下一页'}>
+                <RightOutlined
+                  onClick={nextPage}
+                  tabIndex={0}
+                  role="button"
+                  aria-label="下一页"
+                  onKeyDown={(e) => e.key === 'Enter' && nextPage()}
+                />
+              </Tooltip>
+            </>}
             {zoom && (
               <Tooltip title="放大">
                 <PlusCircleOutlined
