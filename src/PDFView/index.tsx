@@ -188,7 +188,7 @@ const usePDFView = (
             { length: Math.min(pagesPerLoad, numPages - maxLoadedPage) },
             (_, i) => maxLoadedPage + i + 1
           );
-          let newPages = [...new Set([...prev, ...nextPages])].sort((a, b) => a - b);
+          let newPages = Array.from([...prev, ...nextPages]).sort((a, b) => a - b);
 
           // 限制窗口大小
           if (newPages.length > MAX_VISIBLE_PAGES) {
