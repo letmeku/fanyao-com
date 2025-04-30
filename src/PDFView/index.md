@@ -15,7 +15,6 @@ yarn add react-nexlif
 pnpm add react-nexlif
 ```
 
-
 ## 功能特点
 
 - **支持 PDF 文件查看**
@@ -27,24 +26,20 @@ pnpm add react-nexlif
 - **支持动态加载页面，提高性能**
 - **支持错误提示与加载状态**
 
-### 3. 使用示例1
+### 3. 使用示例 1
 
 ```tsx
 import { PDFView } from 'react-nexlif';
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Modal } from 'antd';
 const App = () => {
   const [visible, setVisible] = useState(false);
-    const ref = useRef<HTMLDivElement>(null);
-  const fileUrl = "https://example.com/sample.pdf"; // 替换为你的 PDF 文件地址
+  const ref = useRef<HTMLDivElement>(null);
+  const fileUrl = 'https://example.com/sample.pdf'; // 替换为你的 PDF 文件地址
   return (
-    <div >
+    <div>
       <button onClick={() => setVisible(true)}>打开 PDF</button>
-     {visible&&<PDFView
-          file={fileUrl}
-          onClose={() => setVisible(false)}
-        />
-        }
+      {visible && <PDFView file={fileUrl} onClose={() => setVisible(false)} />}
     </div>
   );
 };
@@ -52,10 +47,10 @@ const App = () => {
 export default App;
 ```
 
-### 3. 使用示例2(插入的父元素)
+### 3. 使用示例 2(插入的父元素)
 
 ```tsx
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { PDFView } from 'react-nexlif';
 import { Button, Modal } from 'antd';
 const App: React.FC = () => {
@@ -65,23 +60,36 @@ const App: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFileUrl(URL.createObjectURL(file))
-    };
+      setFileUrl(URL.createObjectURL(file));
+    }
   };
   return (
-    <div ref={ref} style={{ position: 'relative', height: '100%',width: '100%' }}>
-      <input  type="file" accept=".pdf" onChange={handleFileChange} />
-      
-          <div ref={ref} style={{ position: 'relative', minHeight: '100vh',width:860,height:'100%'}}>
-       <PDFView
+    <div
+      ref={ref}
+      style={{ position: 'relative', height: '100%', width: '100%' }}
+    >
+      <input type="file" accept=".pdf" onChange={handleFileChange} />
+
+      <div
+        ref={ref}
+        style={{
+          position: 'relative',
+          minHeight: '100vh',
+          width: 860,
+          height: '100%',
+        }}
+      >
+        <PDFView
           parentDom={ref.current}
           file={fileUrl}
           width={800}
+          lazyLoad={true}
+          lazyLoadConfig={{ threshold: 400, pagesPerLoad: 4 }}
           onClose={() => {
-            setFileUrl(null)
+            setFileUrl(null);
           }}
         />
-        </div>
+      </div>
     </div>
   );
 };
@@ -91,11 +99,11 @@ export default App;
 
 ## 组件属性
 
-| 属性名       | 类型                  | 默认值  | 说明 |
-|-------------|----------------------|--------|----------------------------------|
-| `file`      | `string \| null`      | `null` | 要加载的 PDF 文件地址 |
+| 属性名      | 类型                     | 默认值          | 说明                                |
+| ----------- | ------------------------ | --------------- | ----------------------------------- |
+| `file`      | `string \| null`         | `null`          | 要加载的 PDF 文件地址               |
 | `parentDom` | `HTMLDivElement \| null` | `document.body` | 组件渲染的父容器，默认渲染到 `body` |
-| `onClose`   | `() => void`          | `undefined` | 关闭组件的回调函数 |
+| `onClose`   | `() => void`             | `undefined`     | 关闭组件的回调函数                  |
 
 ## 组件功能说明
 
@@ -140,5 +148,7 @@ export default App;
 ## 许可证
 
 MIT License
+
+```
 
 ```
