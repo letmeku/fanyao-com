@@ -1,11 +1,11 @@
 {
   "name": "react-nexlif",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A react library developed with dumi",
   "homepage": "https://nexlif.xiaoyaoai.fun/components/ali-uploader",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wangbaoqi1/react-nexlif"
+    "url": "https://nexlif.xiaoyaoai.fun/components/ali-uploader"
   },
   "license": "MIT",
   "author": "wangbaoqi",
@@ -56,6 +56,7 @@
     "ali-oss": "^6.22.0",
     "antd": "^5.24.5",
     "lodash": "^4.17.21",
+    "react-nexlif": "^0.0.7",
     "react-pdf": "^5.7.2",
     "react-table": "^7.8.0",
     "xlsx": "^0.18.5"
