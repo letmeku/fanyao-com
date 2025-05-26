@@ -38,17 +38,46 @@ export const usePDFView = (
   const defaultPagesPerLoad = navigator.hardwareConcurrency > 4 ? 5 : 2;
   const { threshold = defaultThreshold, pagesPerLoad = defaultPagesPerLoad } = lazyLoadConfig;
 
+
+  // 优化可见页面范围，防止加载过多页面
+  const optimizeVisiblePages = (pages: number[]) => {
+    const sortedPages = Array.from(new Set(pages)).sort((a, b) => a - b);
+    if (sortedPages.length > MAX_VISIBLE_PAGES) {
+      const mid = Math.floor((sortedPages[0] + sortedPages[sortedPages.length - 1]) / 2);
+      return sortedPages.filter(
+        (page) => Math.abs(page - mid) <= Math.floor(MAX_VISIBLE_PAGES / 2)
+      );
+    }
+    return sortedPages;
+  };
+
+  // 跳转页面的时候向上加载可见页面
+ const getToVisiblePages = useCallback(() => {
+         setVisiblePages((prev) => {
+        const minLoadedPage = Math.min(...prev);
+        const prevPages = Array.from(
+          { length: Math.min(pagesPerLoad, minLoadedPage-1 ) },
+          (_, i) => minLoadedPage - i - 1
+        ).reverse();
+        let newPages = [...prevPages, ...prev];
+        return optimizeVisiblePages(newPages);
+      });
+ }, [])
+
   // 页面导航
   const lastPage = useCallback((page:number) => {
     if (page > 1) {
+        getToVisiblePages()
       // 如果当前页大于1，则跳转到上一页
       setPageNumber(page - 1)
       setScrolledPage(page - 1)
+
     }
   }, []);
 
   const nextPage = useCallback((page:number) => {
     if (page < numPages) {
+      getToVisiblePages()
       setPageNumber(page + 1)
       setScrolledPage(page + 1)
     }
@@ -157,18 +186,6 @@ export const usePDFView = (
   const handleScroll = debounce(() => {
     const { scrollTop, scrollHeight, clientHeight } = pageDiv.current!;
 
-      // 优化可见页面范围，防止加载过多页面
-  const optimizeVisiblePages = (pages: number[]) => {
-    const sortedPages = Array.from(new Set(pages)).sort((a, b) => a - b);
-    if (sortedPages.length > MAX_VISIBLE_PAGES) {
-      const mid = Math.floor((sortedPages[0] + sortedPages[sortedPages.length - 1]) / 2);
-      return sortedPages.filter(
-        (page) => Math.abs(page - mid) <= Math.floor(MAX_VISIBLE_PAGES / 2)
-      );
-    }
-    return sortedPages;
-  };
-
     // 向下滚动接近底部时加载更多页面
     if (scrollHeight - scrollTop - clientHeight <= threshold) {
       setVisiblePages((prev) => {
@@ -184,15 +201,7 @@ export const usePDFView = (
 
     // 向上滚动接近顶部时加载前面页面
     if (scrollTop <= threshold) {
-      setVisiblePages((prev) => {
-        const minLoadedPage = Math.min(...prev);
-        const prevPages = Array.from(
-          { length: Math.min(pagesPerLoad, minLoadedPage-1 ) },
-          (_, i) => minLoadedPage - i - 1
-        ).reverse();
-        let newPages = [...prevPages, ...prev];
-        return optimizeVisiblePages(newPages);
-      });
+       getToVisiblePages()
     }
   }, 100);
 
