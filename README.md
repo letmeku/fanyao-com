@@ -1,4 +1,4 @@
-# react-nexlif
+# fanyao-com
 
 [![NPM version](https://img.shields.io/npm/v/react-nexlif.svg?style=flat)](https://npmjs.org/package/react-nexlif)
 [![NPM downloads](http://img.shields.io/npm/dm/react-nexlif.svg?style=flat)](https://npmjs.org/package/react-nexlif)
