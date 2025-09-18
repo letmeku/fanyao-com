@@ -1,14 +1,14 @@
 {
-  "name": "react-nexlif",
-  "version": "0.0.9",
-  "description": "A react library developed with dumi",
-  "homepage": "https://nexlif.xiaoyaoai.fun/components/ali-uploader",
+  "name": "fanyao-com",
+  "version": "0.0.1",
+  "description": "A react library developed with dumi,forked from wangbaoqi1/react-nexlif 0.0.9@2025-09-18",
+  "homepage": "https://github.com/letmeku/react-nexlif",
   "repository": {
     "type": "git",
-    "url": "https://nexlif.xiaoyaoai.fun/components/ali-uploader"
+    "url": "https://github.com/letmeku/react-nexlif"
   },
   "license": "MIT",
-  "author": "wangbaoqi",
+  "author": "letmeku",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
