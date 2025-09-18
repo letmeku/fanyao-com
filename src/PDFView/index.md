@@ -131,6 +131,7 @@ export default App;
 | `screenScale` | `boolean` | `true` | 是否显示全屏/恢复按钮。                      |
 | `thumbnails`  | `boolean` | `true` | 是否显示缩略图切换按钮。                     |
 | `close`       | `boolean` | `true` | 是否显示关闭按钮。                           |
+| `currentPage`       | `number` | `1` | 打开PDF时定位到页码。                           |
 
 #### `lazyLoadConfig` 配置项
 
