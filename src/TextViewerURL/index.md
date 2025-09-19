@@ -9,29 +9,29 @@
 使用 `npm` 或 `yarn` 安装组件：
 
 ```sh
-npm install react-nexlif
+npm install fanyao-com
 # 或者
-yarn add react-nexlif
+yarn add fanyao-com
 
 # 或者
-pnpm add react-nexlif
+pnpm add fanyao-com
 ```
 
 ## 使用示例
 
 ```tsx
 import React from 'react';
-import {TextViewerURL,utils} from 'react-nexlif';
-
+import { TextViewerURL, utils } from 'fanyao-com';
 
 const App = () => {
   return (
     <div>
       <h1>Excel 文件预览</h1>
-      <>{
-        utils.browserVersionTest().name
-      }</>
-      <TextViewerURL height={500} fileUrl="http://192.168.110.40:9000/knowledgebase/1数据分析与挖掘ANSI_20250311140842.txt" />
+      <>{utils.browserVersionTest().name}</>
+      <TextViewerURL
+        height={500}
+        fileUrl="http://192.168.110.40:9000/knowledgebase/1数据分析与挖掘ANSI_20250311140842.txt"
+      />
     </div>
   );
 };
@@ -40,16 +40,15 @@ export default App;
 
 ## Props
 
-| 参数     | 类型   | 必填 | 说明                         |
-|--------|------|----|----------------------------|
-| fileUrl | `string` | 是  | 远程文本文件的 URL 地址 |
+| 参数    | 类型     | 必填 | 说明                    |
+| ------- | -------- | ---- | ----------------------- |
+| fileUrl | `string` | 是   | 远程文本文件的 URL 地址 |
 
 ## 特性
 
 - **自动编码检测**：支持 UTF-8（含 BOM）、UTF-16 LE/BE（含 BOM）、GB18030、ISO-8859-1 编码。
 - **错误处理**：如果文件无法解码，会显示错误信息。
 - **异步加载**：文件通过 `fetch` 加载，并在加载过程中显示“加载中...”提示。
-
 
 ## 依赖
 
@@ -58,6 +57,8 @@ export default App;
 ## 许可证
 
 本组件遵循 MIT 许可证。
+
 ```
 
 这样，文档涵盖了组件的功能、用法、API、特性和样式信息，符合标准的组件文档格式。你可以根据需要进一步调整或补充。
+```

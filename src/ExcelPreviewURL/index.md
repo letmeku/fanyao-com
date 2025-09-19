@@ -5,12 +5,12 @@
 ## 安装
 
 ```sh
-npm install react-nexlif
+npm install fanyao-com
 # 或者
-yarn add react-nexlif
+yarn add fanyao-com
 
 # 或者
-pnpm add react-nexlif
+pnpm add fanyao-com
 ```
 
 ## 使用方法
@@ -21,13 +21,16 @@ pnpm add react-nexlif
 
 ```jsx
 import React from 'react';
-import {ExcelPreviewURL} from 'react-nexlif';;
+import { ExcelPreviewURL } from 'fanyao-com';
 
 const App = () => {
   return (
     <div>
       <h1>Excel 文件预览</h1>
-      <ExcelPreviewURL height={500} fileUrl="http://192.168.110.40:9000/knowledgebase/是是是(1)_20250321134651.xlsx" />
+      <ExcelPreviewURL
+        height={500}
+        fileUrl="http://192.168.110.40:9000/knowledgebase/是是是(1)_20250321134651.xlsx"
+      />
     </div>
   );
 };
@@ -37,8 +40,8 @@ export default App;
 
 ### 属性 (Props)
 
-| 属性名   | 类型   | 是否必填 | 默认值 | 描述                       |
-|----------|--------|----------|--------|----------------------------|
+| 属性名    | 类型     | 是否必填 | 默认值 | 描述                                      |
+| --------- | -------- | -------- | ------ | ----------------------------------------- |
 | `fileUrl` | `string` | 是       | 无     | Excel 文件的 URL 地址，用于加载和解析文件 |
 
 ### 功能特性
@@ -59,11 +62,10 @@ export default App;
 
 加载后，组件将渲染为：
 
-| Name   | Age | Birthdate  |
-|--------|-----|------------|
-| Alice  | 25  | 1998-05-10 |
-| Bob    | 30  | 1993-12-15 |
-
+| Name  | Age | Birthdate  |
+| ----- | --- | ---------- |
+| Alice | 25  | 1998-05-10 |
+| Bob   | 30  | 1993-12-15 |
 
 ## 开发与贡献
 
@@ -72,6 +74,7 @@ export default App;
 ## 许可证
 
 MIT License
+
 ```
 
 ### 说明
@@ -81,3 +84,4 @@ MIT License
 - **样式自定义**：提供了类名说明和示例，方便用户调整外观。
 
 如果需要调整内容（比如添加更多示例或修改描述），请告诉我！
+```

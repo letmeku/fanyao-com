@@ -19,12 +19,12 @@ AliUploader 组件是一个文件上传组件，支持上传到阿里云 OSS，�
 使用 `npm` 或 `yarn` 安装组件：
 
 ```sh
-npm install react-nexlif
+npm install fanyao-com
 # 或者
-yarn add react-nexlif
+yarn add fanyao-com
 
 # 或者
-pnpm install react-nexlif
+pnpm install fanyao-com
 ```
 
 ---
@@ -35,7 +35,7 @@ pnpm install react-nexlif
 
 ```tsx
 import React, { useState, useRef } from 'react';
-import { AliUploader } from 'react-nexlif';
+import { AliUploader } from 'fanyao-com';
 import { ApartmentOutlined } from '@ant-design/icons';
 // import {ossConfig} from './utils';
 
@@ -94,25 +94,25 @@ export default App;
 
 ## 组件属性
 
-| 属性名         | 类型      | 默认值 | 说明 |
-|--------------|---------|------|--------------------------------------|
-| `accept`      | `string` | `.doc,.docx,.xls,.xlsx,.pdf,.pptx,.png,.jpg` | 允许上传的文件类型 |
-| `uploadName`  | `string` | `上传文件` | 按钮名称 |
-| `listType`    | `'text' \| 'picture'` | `text` | 显示文件列表的样式 |
-| `maxCount`    | `number` | `1` | 允许上传的最大文件数 |
-| `maxBytes`    | `number` | `20` | 允许的最大文件大小（单位：MB） |
-| `multiple`    | `boolean` | `false` | 是否支持多文件上传 |
-| `fileList`    | `FileData[]` | `[]` | 默认文件列表 |
-| `uploadUrl`   | `string` | `undefined` | 上传地址（未使用 OSS 时） |
-| `ossConfig`   | `object` | `undefined` | OSS 配置（region, accessKeyId, accessKeySecret, bucket） |
-| `showUploadList` | `boolean` | `true` | 是否显示文件列表 |
-| `disabled`    | `boolean` | `false` | 是否禁用上传 |
-| `extraTip`    | `ReactNode` | `undefined` | 额外提示信息 |
-| `showTips`    | `boolean` | `true` | 是否显示上传提示 |
-| `onChange`    | `(list: FileData[]) => void` | `undefined` | 文件列表变化时触发 |
-| `onLoading`   | `(loading: boolean) => void` | `undefined` | 上传状态变化时触发 |
-| `onSuccess`   | `(list: FileData[]) => void` | `undefined` | 上传成功时触发 |
-| `filedIds`    | `(ids: string[]) => void` | `undefined` | 返回上传的文件 ID |
+| 属性名           | 类型                         | 默认值                                       | 说明                                                     |
+| ---------------- | ---------------------------- | -------------------------------------------- | -------------------------------------------------------- |
+| `accept`         | `string`                     | `.doc,.docx,.xls,.xlsx,.pdf,.pptx,.png,.jpg` | 允许上传的文件类型                                       |
+| `uploadName`     | `string`                     | `上传文件`                                   | 按钮名称                                                 |
+| `listType`       | `'text' \| 'picture'`        | `text`                                       | 显示文件列表的样式                                       |
+| `maxCount`       | `number`                     | `1`                                          | 允许上传的最大文件数                                     |
+| `maxBytes`       | `number`                     | `20`                                         | 允许的最大文件大小（单位：MB）                           |
+| `multiple`       | `boolean`                    | `false`                                      | 是否支持多文件上传                                       |
+| `fileList`       | `FileData[]`                 | `[]`                                         | 默认文件列表                                             |
+| `uploadUrl`      | `string`                     | `undefined`                                  | 上传地址（未使用 OSS 时）                                |
+| `ossConfig`      | `object`                     | `undefined`                                  | OSS 配置（region, accessKeyId, accessKeySecret, bucket） |
+| `showUploadList` | `boolean`                    | `true`                                       | 是否显示文件列表                                         |
+| `disabled`       | `boolean`                    | `false`                                      | 是否禁用上传                                             |
+| `extraTip`       | `ReactNode`                  | `undefined`                                  | 额外提示信息                                             |
+| `showTips`       | `boolean`                    | `true`                                       | 是否显示上传提示                                         |
+| `onChange`       | `(list: FileData[]) => void` | `undefined`                                  | 文件列表变化时触发                                       |
+| `onLoading`      | `(loading: boolean) => void` | `undefined`                                  | 上传状态变化时触发                                       |
+| `onSuccess`      | `(list: FileData[]) => void` | `undefined`                                  | 上传成功时触发                                           |
+| `filedIds`       | `(ids: string[]) => void`    | `undefined`                                  | 返回上传的文件 ID                                        |
 
 ## 组件方法
 

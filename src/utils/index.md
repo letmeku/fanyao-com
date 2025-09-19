@@ -1,4 +1,3 @@
-
 ## 常用使用工具
 
 ## 简介
@@ -17,15 +16,17 @@
 
 ```tsx
 import React from 'react';
-import {utils} from 'react-nexlif';
+import { utils } from 'fanyao-com';
 
 const App = () => {
   return (
     <div>
       <h1>浏览器工具测试</h1>
-      <p>{
-        utils.browserVersionTest().name +'' +utils.browserVersionTest().version 
-        }</p>
+      <p>
+        {utils.browserVersionTest().name +
+          '' +
+          utils.browserVersionTest().version}
+      </p>
     </div>
   );
 };
@@ -62,14 +63,10 @@ export default App;
 
 目前支持的浏览器和最低版本写在 `browserSupportRules` 里：
 
-
-
 - 如果浏览器不在列表里，会提示“推荐用 Chrome 73+”。
 - 如果版本太低，会显示对应的警告消息。
 
 #### 怎么用
-
-
 
 ### 3. `browserVersionTest()`
 

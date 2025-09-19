@@ -1,4 +1,3 @@
-
 ## browserVersionTest 浏览器检测工具使用说明
 
 ## 简介
@@ -17,15 +16,17 @@
 
 ```tsx
 import React from 'react';
-import {utils} from 'react-nexlif';
+import { utils } from 'fanyao-com';
 
 const App = () => {
   return (
     <div>
       <h1>浏览器工具测试</h1>
-      <p>{
-        utils.browserVersionTest().name +'' +utils.browserVersionTest().version 
-        }</p>
+      <p>
+        {utils.browserVersionTest().name +
+          '' +
+          utils.browserVersionTest().version}
+      </p>
     </div>
   );
 };
@@ -48,7 +49,7 @@ export default App;
 #### 怎么用
 
 ```tsx
-import { detectBrowser } from'react-nexlify';
+import { detectBrowser } from 'fanyao-com';
 const browser = detectBrowser(navigator.userAgent);
 console.log(browser); // 比如：{ name: 'Chrome', version: '90' }
 ```
@@ -82,7 +83,7 @@ const browserSupportRules = {
 
 ```javascript
 import React from 'react';
-import {browserVersionTest} from 'react-nexlif';
+import { browserVersionTest } from 'fanyao-com';
 
 checkCompatibility(); // 控制台会告诉你结果
 ```

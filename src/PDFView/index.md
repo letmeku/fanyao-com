@@ -7,12 +7,12 @@
 ## 安装
 
 ```sh
-npm install react-nexlif
+npm install fanyao-com
 # 或者
-yarn add react-nexlif
+yarn add fanyao-com
 
 # 或者
-pnpm add react-nexlif
+pnpm add fanyao-com
 ```
 
 ## 功能特点
@@ -29,7 +29,7 @@ pnpm add react-nexlif
 ### 3. 使用示例 1
 
 ```tsx
-import { PDFView } from 'react-nexlif';
+import { PDFView } from 'fanyao-com';
 import React, { useState, useRef } from 'react';
 import { Button, Modal } from 'antd';
 const App = () => {
@@ -57,7 +57,7 @@ export default App;
 
 ```tsx
 import React, { useState, useRef, useEffect } from 'react';
-import { PDFView } from 'react-nexlif';
+import { PDFView } from 'fanyao-com';
 import { Button, Modal } from 'antd';
 const App: React.FC = () => {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
@@ -131,7 +131,7 @@ export default App;
 | `screenScale` | `boolean` | `true` | 是否显示全屏/恢复按钮。                      |
 | `thumbnails`  | `boolean` | `true` | 是否显示缩略图切换按钮。                     |
 | `close`       | `boolean` | `true` | 是否显示关闭按钮。                           |
-| `currentPage`       | `number` | `1` | 打开PDF时定位到页码。                           |
+| `currentPage` | `number`  | `1`    | 打开 PDF 时定位到页码。                      |
 
 #### `lazyLoadConfig` 配置项
 
